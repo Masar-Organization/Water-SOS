@@ -1,5 +1,4 @@
-
-import 'package:water_sos/core/app_regex.dart';
+import 'package:water_sos/core/helpers/app_regex.dart';
 
 class AppValidators {
   static String? validateName(String? value) {

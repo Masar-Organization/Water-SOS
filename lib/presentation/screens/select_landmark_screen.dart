@@ -1,0 +1,68 @@
+import 'package:flutter/material.dart';
+import 'package:water_sos/presentation/screens/location_flow_screen.dart';
+import 'package:water_sos/presentation/screens/location_selection.dart';
+import 'package:water_sos/presentation/screens/map_illustration.dart';
+import 'package:water_sos/presentation/screens/shared_widgets.dart';
+
+class SelectLandmarkScreen extends StatefulWidget {
+  final LocationSelection selection;
+  final ValueChanged<String> onNext;
+  const SelectLandmarkScreen({super.key, required this.selection, required this.onNext});
+
+  @override
+  State<SelectLandmarkScreen> createState() => _SelectLandmarkScreenState();
+}
+
+class _SelectLandmarkScreenState extends State<SelectLandmarkScreen> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.selection.landmark ?? '');
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StepScaffold(
+      title: 'أدخل معلمًا معروفًا',
+      subtitle: 'اكتب معلمًا قريبًا من موقعك لتحديده بدقة',
+      illustration: const MapIllustration(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          const Align(
+            alignment: Alignment.centerRight,
+            child: Text('المعلم (اختياري)', style: TextStyle(fontWeight: FontWeight.w600)),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _controller,
+            textAlign: TextAlign.right,
+            decoration: InputDecoration(
+              hintText: 'مثال: مسجد النور، مدرسة فلسطين، دوار الشهداء',
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFFD3DCEC)),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          const InfoBanner(title: 'معلومة', text: 'كلما كان المعلم أقرب لموقعك كان تحديده أدق.'),
+        ],
+      ),
+      footer: NextButton(
+        enabled: true,
+        onPressed: () => widget.onNext(_controller.text.trim()),
+      ),
+    );
+  }
+}
