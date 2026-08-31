@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:water_sos/core/constants/app_images.dart';
+import 'package:water_sos/data/dummy_data.dart';
 import 'package:water_sos/presentation/screens/location_flow_screen.dart';
-import 'package:water_sos/presentation/screens/location_selection.dart';
-import 'package:water_sos/presentation/screens/map_illustration.dart';
-import 'package:water_sos/presentation/screens/selectable_tile.dart';
-import 'package:water_sos/presentation/screens/shared_widgets.dart';
+import 'package:water_sos/core/constants/location_selection.dart';
+import 'package:water_sos/presentation/widgets/custom_elevated_button.dart';
+import 'package:water_sos/presentation/widgets/location_flow/selected_value_bar.dart';
+import 'package:water_sos/presentation/widgets/location_flow/step_scaffold.dart';
+import 'package:water_sos/presentation/widgets/map_illustration.dart';
+import 'package:water_sos/presentation/widgets/location_flow/selectable_tile.dart';
+import 'package:water_sos/presentation/widgets/location_flow/review_tile.dart';
 
 class SelectGovernorateScreen extends StatefulWidget {
   final LocationSelection selection;
@@ -32,7 +37,9 @@ class _SelectGovernorateScreenState extends State<SelectGovernorateScreen> {
       subtitle: widget.selection.wasCapturedByGps
           ? 'تم اقتراح المحافظة تلقائياً بناءً على موقعك، ويمكنك تغييرها'
           : 'اختر المحافظة التي تقع بها',
-      illustration: const MapIllustration(),
+      illustration:  MapIllustration(
+        image: AppImages.imageGovernorate,
+      ),
       body: Column(
         children: [
           if (widget.selection.wasCapturedByGps)
@@ -50,10 +57,11 @@ class _SelectGovernorateScreenState extends State<SelectGovernorateScreen> {
           }),
         ],
       ),
-      footer: NextButton(
-        enabled: selected != null,
+      footer: CustomElevatedButton(
+        text: "التالي",
         onPressed: () => widget.onNext(selected!),
       ),
+
     );
   }
 }

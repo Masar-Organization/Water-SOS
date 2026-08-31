@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-abstract class AppColors {
+@immutable
+class AppColors extends ThemeExtension<AppColors> {
   final Color primaryColor;
   final Color backgroundColor;
   final Color cardColor;
@@ -12,41 +13,100 @@ abstract class AppColors {
   final Color textPrimaryColor;
   final Color textSecondaryColor;
 
-  final Color buttonBackgroundColor;
-  final Color buttonTextColor;
+  final Color borderColor;
+  final Color selectedBackgroundColor;
+  final Color iconBackgroundColor;
 
   const AppColors({
     required this.primaryColor,
     required this.backgroundColor,
     required this.cardColor,
-
     required this.inputBorderColor,
     required this.inputFocusedBorderColor,
     required this.inputErrorBorderColor,
-
     required this.textPrimaryColor,
     required this.textSecondaryColor,
-
-    required this.buttonBackgroundColor,
-    required this.buttonTextColor,
+    required this.borderColor,
+    required this.selectedBackgroundColor,
+    required this.iconBackgroundColor,
   });
-}
 
-class AppColorLight extends AppColors {
-  const AppColorLight()
-    : super(
-        primaryColor: const Color(0xFF00A3C4),
-        backgroundColor: const Color(0xFFF8F9FA),
-        cardColor: const Color(0xFFFFFFFF),
+  @override
+  AppColors copyWith({
+    Color? primaryColor,
+    Color? backgroundColor,
+    Color? cardColor,
+    Color? inputBorderColor,
+    Color? inputErrorBorderColor,
+    Color? inputFocusedBorderColor,
+    Color? textPrimaryColor,
+    Color? textSecondaryColor,
+    Color? borderColor,
+    Color? selectedBackgroundColor,
+    Color? iconBackgroundColor,
+  }) {
+    return AppColors(
+      primaryColor: primaryColor ?? this.primaryColor,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
+      cardColor: cardColor ?? this.cardColor,
+      inputBorderColor: inputBorderColor ?? this.inputBorderColor,
+      inputErrorBorderColor:
+          inputErrorBorderColor ?? this.inputErrorBorderColor,
+      inputFocusedBorderColor:
+          inputFocusedBorderColor ?? this.inputFocusedBorderColor,
+      textPrimaryColor: textPrimaryColor ?? this.textPrimaryColor,
+      textSecondaryColor: textSecondaryColor ?? this.textSecondaryColor,
+      borderColor: borderColor ?? this.borderColor,
+      selectedBackgroundColor:
+          selectedBackgroundColor ?? this.selectedBackgroundColor,
+      iconBackgroundColor: iconBackgroundColor ?? this.iconBackgroundColor,
+    );
+  }
 
-        inputBorderColor: const Color(0xFF9CA3AF),
-        inputFocusedBorderColor: const Color(0xFF00A3C4),
-        inputErrorBorderColor: const Color(0xFFEF4444),
+  @override
+  AppColors lerp(covariant AppColors? other, double t) {
+    if (other == null) return this;
 
-        textPrimaryColor: const Color(0xFF181A1B),
-        textSecondaryColor: const Color(0xFF64748B),
-
-        buttonBackgroundColor: const Color(0xFF9747FF),
-        buttonTextColor: const Color(0xFFFFFFFF),
-      );
+    return AppColors(
+      primaryColor: Color.lerp(primaryColor, other.primaryColor, t)!,
+      backgroundColor: Color.lerp(backgroundColor, other.backgroundColor, t)!,
+      cardColor: Color.lerp(cardColor, other.cardColor, t)!,
+      inputBorderColor: Color.lerp(
+        inputBorderColor,
+        other.inputBorderColor,
+        t,
+      )!,
+      inputErrorBorderColor: Color.lerp(
+        inputErrorBorderColor,
+        other.inputErrorBorderColor,
+        t,
+      )!,
+      inputFocusedBorderColor: Color.lerp(
+        inputFocusedBorderColor,
+        other.inputFocusedBorderColor,
+        t,
+      )!,
+      textPrimaryColor: Color.lerp(
+        textPrimaryColor,
+        other.textPrimaryColor,
+        t,
+      )!,
+      textSecondaryColor: Color.lerp(
+        textSecondaryColor,
+        other.textSecondaryColor,
+        t,
+      )!,
+      borderColor: Color.lerp(borderColor, other.borderColor, t)!,
+      selectedBackgroundColor: Color.lerp(
+        selectedBackgroundColor,
+        other.selectedBackgroundColor,
+        t,
+      )!,
+      iconBackgroundColor: Color.lerp(
+        iconBackgroundColor,
+        other.iconBackgroundColor,
+        t,
+      )!,
+    );
+  }
 }

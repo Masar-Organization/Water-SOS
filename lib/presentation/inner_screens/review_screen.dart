@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:water_sos/presentation/screens/location_flow_screen.dart';
-import 'package:water_sos/presentation/screens/location_selection.dart';
-import 'package:water_sos/presentation/screens/map_illustration.dart';
-import 'package:water_sos/presentation/screens/shared_widgets.dart';
+import 'package:water_sos/core/constants/app_images.dart';
+import 'package:water_sos/core/constants/location_selection.dart';
+import 'package:water_sos/core/extension/app_sizes.dart';
+import 'package:water_sos/presentation/widgets/custom_elevated_button.dart';
+import 'package:water_sos/presentation/widgets/custom_outlined_button.dart';
+import 'package:water_sos/presentation/widgets/location_flow/info_banner.dart';
+import 'package:water_sos/presentation/widgets/location_flow/step_scaffold.dart';
+import 'package:water_sos/presentation/widgets/map_illustration.dart';
+import 'package:water_sos/presentation/widgets/location_flow/review_tile.dart';
 
 class ReviewScreen extends StatelessWidget {
   final LocationSelection selection;
   final ValueChanged<String> onEditStep;
 
-  const ReviewScreen({super.key, required this.selection, required this.onEditStep});
+  const ReviewScreen({
+    super.key,
+    required this.selection,
+    required this.onEditStep,
+  });
 
   String _formatCapturedAt(DateTime dt) {
     String two(int n) => n.toString().padLeft(2, '0');
@@ -40,7 +49,10 @@ class ReviewScreen extends StatelessWidget {
           Center(
             child: ElevatedButton(
               onPressed: () => Navigator.of(ctx).pop(),
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF1657D6), foregroundColor: Colors.white),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF1657D6),
+                foregroundColor: Colors.white,
+              ),
               child: const Text('حسناً'),
             ),
           ),
@@ -54,11 +66,13 @@ class ReviewScreen extends StatelessWidget {
     return StepScaffold(
       title: 'مراجعة وتأكيد الموقع',
       subtitle: 'تحقق من بيانات العنوان قبل التأكيد',
-      illustration: const MapIllustration(),
+      illustration: MapIllustration(image: AppImages.imageConfirmLocation),
       body: Column(
         children: [
           ReviewTile(
-            icon: selection.wasCapturedByGps ? Icons.gps_fixed : Icons.edit_location_alt,
+            icon: selection.wasCapturedByGps
+                ? Icons.gps_fixed
+                : Icons.edit_location_alt,
             title: 'طريقة التحديد',
             value: selection.wasCapturedByGps
                 ? 'عبر GPS — بتاريخ ${_formatCapturedAt(selection.capturedAt!)}'
@@ -86,38 +100,34 @@ class ReviewScreen extends StatelessWidget {
           ReviewTile(
             icon: Icons.edit,
             title: 'المعلم',
-            value: (selection.landmark?.isNotEmpty ?? false) ? selection.landmark! : 'لا يوجد',
+            value: (selection.landmark?.isNotEmpty ?? false)
+                ? selection.landmark!
+                : 'لا يوجد',
             onEdit: () => onEditStep('landmark'),
           ),
           const SizedBox(height: 8),
-          const InfoBanner(title: 'معلومة', text: 'تأكد من صحة العنوان لتصلك خدماتنا بشكل أسرع وأكثر دقة.'),
+          const InfoBanner(
+            title: 'معلومة',
+            text: 'تأكد من صحة العنوان لتصلك خدماتنا بشكل أسرع وأكثر دقة.',
+          ),
         ],
       ),
       footer: Row(
+        spacing: context.width(10),
         children: [
           Expanded(
-            child: OutlinedButton.icon(
-              onPressed: () => onEditStep('governorate'),
-              icon: const Icon(Icons.edit, size: 18),
-              label: const Text('تعديل العنوان'),
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-              ),
+            child: CustomOutlinedButton(
+              text: 'تعديل العنوان',
+              onPressed: () => onEditStep('method'),
+              iconData: Icons.edit,
             ),
           ),
-          const SizedBox(width: 10),
+
           Expanded(
-            child: ElevatedButton.icon(
+            child: CustomElevatedButton(
+              text: 'تأكيد الموقع',
               onPressed: selection.hasBasics ? () => _confirm(context) : null,
-              icon: const Icon(Icons.arrow_back_ios_new, size: 14),
-              label: const Text('تأكيد الموقع'),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(52),
-                backgroundColor: const Color(0xFF1657D6),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-              ),
+              iconData: Icons.arrow_back_ios_new,
             ),
           ),
         ],

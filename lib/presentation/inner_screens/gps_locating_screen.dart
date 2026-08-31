@@ -1,19 +1,26 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:water_sos/data/dummy_data.dart';
 import 'package:water_sos/presentation/screens/location_flow_screen.dart';
-import 'package:water_sos/presentation/screens/location_selection.dart';
-import 'package:water_sos/presentation/screens/shared_widgets.dart';
+import 'package:water_sos/core/constants/location_selection.dart';
+import 'package:water_sos/presentation/widgets/location_flow/info_banner.dart';
+import 'package:water_sos/presentation/widgets/location_flow/review_tile.dart';
+import 'package:water_sos/presentation/widgets/custom_elevated_button.dart';
+import 'package:water_sos/presentation/widgets/custom_outlined_button.dart';
+import 'package:water_sos/presentation/widgets/location_flow/step_scaffold.dart';
+import 'package:water_sos/presentation/widgets/location_flow/tips_box.dart';
 
-enum _GpsState { locating, success, serviceDisabled, permissionDenied, permissionDeniedForever, timedOut, error }
+enum _GpsState {
+  locating,
+  success,
+  serviceDisabled,
+  permissionDenied,
+  permissionDeniedForever,
+  timedOut,
+  error,
+}
 
-/// Actually talks to the device's location services (unlike the rest of the
-/// flow, which still runs on dummy data). On success it writes
-/// [LocationSelection.latitude], [LocationSelection.longitude] and
-/// [LocationSelection.capturedAt] onto `selection`, reverse-geocodes them
-/// into an address (stand-in — swap `DummyData.reverseGeocode` for a real
-/// API call), and calls [onCaptured] so the flow moves on to the
-/// governorate step with the fields already pre-filled.
 class GpsLocatingScreen extends StatefulWidget {
   final LocationSelection selection;
   final VoidCallback onCaptured;
@@ -30,7 +37,8 @@ class GpsLocatingScreen extends StatefulWidget {
   State<GpsLocatingScreen> createState() => _GpsLocatingScreenState();
 }
 
-class _GpsLocatingScreenState extends State<GpsLocatingScreen> with SingleTickerProviderStateMixin {
+class _GpsLocatingScreenState extends State<GpsLocatingScreen>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _pulseController;
   _GpsState _state = _GpsState.locating;
   String? _errorDetail;
@@ -38,7 +46,10 @@ class _GpsLocatingScreenState extends State<GpsLocatingScreen> with SingleTicker
   @override
   void initState() {
     super.initState();
-    _pulseController = AnimationController(vsync: this, duration: const Duration(seconds: 2))..repeat();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
     _startLocating();
   }
 
@@ -75,13 +86,14 @@ class _GpsLocatingScreenState extends State<GpsLocatingScreen> with SingleTicker
         desiredAccuracy: LocationAccuracy.high,
       ).timeout(const Duration(seconds: 20));
 
-      // This is the "captured_at" the flow needs: the exact moment the fix
-      // was obtained, stored alongside the coordinates.
       widget.selection.latitude = position.latitude;
       widget.selection.longitude = position.longitude;
       widget.selection.capturedAt = DateTime.now();
 
-      final geocoded = DummyData.reverseGeocode(position.latitude, position.longitude);
+      final geocoded = DummyData.reverseGeocode(
+        position.latitude,
+        position.longitude,
+      );
       widget.selection.governorate = geocoded.governorate;
       widget.selection.region = geocoded.region;
       widget.selection.streetNeighborhood = geocoded.street;
@@ -89,8 +101,6 @@ class _GpsLocatingScreenState extends State<GpsLocatingScreen> with SingleTicker
       if (!mounted) return;
       setState(() => _state = _GpsState.success);
 
-      // Brief confirmation pause before moving on, matching the original
-      // "جاري تحديد موقعك..." → auto-advance behaviour.
       await Future.delayed(const Duration(milliseconds: 700));
       if (mounted) widget.onCaptured();
     } on TimeoutException {
@@ -112,7 +122,9 @@ class _GpsLocatingScreenState extends State<GpsLocatingScreen> with SingleTicker
     return StepScaffold(
       title: isBusy ? 'جاري تحديد موقعك...' : 'تعذر تحديد موقعك',
       subtitle: _subtitleFor(_state),
-      illustration: isBusy ? _pulsingLocationIcon() : const Icon(Icons.location_off, size: 90, color: Colors.redAccent),
+      illustration: isBusy
+          ? _pulsingLocationIcon()
+          : const Icon(Icons.location_off, size: 90, color: Colors.redAccent),
       body: isBusy
           ? const TipsBox(
               title: 'نصائح للحصول على نتائج أدق',
@@ -122,40 +134,26 @@ class _GpsLocatingScreenState extends State<GpsLocatingScreen> with SingleTicker
                 (Icons.wifi, 'تحقق من اتصال الإنترنت'),
               ],
             )
-          : InfoBanner(title: 'السبب', text: _errorDetail ?? _subtitleFor(_state)),
+          : InfoBanner(
+              title: 'السبب',
+              text: _errorDetail ?? _subtitleFor(_state),
+            ),
       footer: isBusy
-          ? OutlinedButton(
-              onPressed: widget.onCancel,
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size.fromHeight(52),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-              ),
-              child: const Text('إلغاء'),
-            )
+          ? CustomOutlinedButton(onPressed: widget.onCancel, text: 'إلغاء')
           : Row(
+              spacing: 10,
               children: [
                 Expanded(
-                  child: OutlinedButton(
+                  child: CustomOutlinedButton(
                     onPressed: widget.onCancel,
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(52),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                    ),
-                    child: const Text('إدخال العنوان يدوياً'),
+                    text: 'إدخال العنوان يدوياً',
                   ),
                 ),
-                const SizedBox(width: 10),
+
                 Expanded(
-                  child: ElevatedButton(
-                    onPressed: _startLocating,
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(52),
-                      backgroundColor: const Color(0xFF1657D6),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-                    ),
-                    child: const Text('إعادة المحاولة'),
-                  ),
+                  child: CustomElevatedButton(text: 'إعادة المحاولة', onPressed: _startLocating,)
+
+
                 ),
               ],
             ),
@@ -197,13 +195,20 @@ class _GpsLocatingScreenState extends State<GpsLocatingScreen> with SingleTicker
                   child: Container(
                     width: 200 * ((_pulseController.value + scale) % 1.0),
                     height: 200 * ((_pulseController.value + scale) % 1.0),
-                    decoration: const BoxDecoration(shape: BoxShape.circle, color: Color(0xFF1657D6)),
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFF1657D6),
+                    ),
                   ),
                 ),
               Icon(
-                _state == _GpsState.success ? Icons.check_circle : Icons.location_on,
+                _state == _GpsState.success
+                    ? Icons.check_circle
+                    : Icons.location_on,
                 size: 46,
-                color: _state == _GpsState.success ? Colors.green : const Color(0xFF1657D6),
+                color: _state == _GpsState.success
+                    ? Colors.green
+                    : const Color(0xFF1657D6),
               ),
             ],
           ),

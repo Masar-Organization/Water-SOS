@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:water_sos/presentation/screens/location_flow_screen.dart';
-import 'package:water_sos/presentation/screens/location_selection.dart';
-import 'package:water_sos/presentation/screens/map_illustration.dart';
-import 'package:water_sos/presentation/screens/selectable_tile.dart';
+import 'package:water_sos/core/constants/app_images.dart';
+import 'package:water_sos/data/dummy_data.dart';
+import 'package:water_sos/core/constants/location_selection.dart';
+import 'package:water_sos/presentation/widgets/custom_elevated_button.dart';
+import 'package:water_sos/presentation/widgets/location_flow/step_scaffold.dart';
+import 'package:water_sos/presentation/widgets/map_illustration.dart';
+import 'package:water_sos/presentation/widgets/location_flow/selectable_tile.dart';
 
-/// Just collects which method the citizen wants to use. It does **not**
-/// decide what happens next — that branching (GPS capture vs. manual
-/// address entry) lives in `LocationFlowScreen._onMethodChosen`, since this
-/// widget only knows about itself, not about the rest of the flow.
 class SelectCitizenLocation extends StatefulWidget {
   final LocationSelection selection;
   final ValueChanged<String> onNext;
-  const SelectCitizenLocation({super.key, required this.selection, required this.onNext});
+  const SelectCitizenLocation({
+    super.key,
+    required this.selection,
+    required this.onNext,
+  });
 
   @override
   State<SelectCitizenLocation> createState() => _SelectCitizenLocationState();
@@ -31,20 +34,25 @@ class _SelectCitizenLocationState extends State<SelectCitizenLocation> {
     return StepScaffold(
       title: 'اختر طريقة تحديد موقعك',
       subtitle: 'يمكنك استخدام GPS أو إدخال العنوان يدوياً',
-      illustration: const MapIllustration(),
+      illustration: MapIllustration(
+        image: AppImages.imageIllustration,
+        //  image: selected == 'GPS' ? AppImages.imageGpsIllustration : AppImages.imageManualIllustration,
+      ),
       body: Column(
         children: DummyData.methods.map((m) {
           final isSelected = selected == m;
           return SelectableTile(
             label: m,
             selected: isSelected,
-            leadingIcon: m.contains('GPS') ? Icons.gps_fixed : Icons.edit_location_alt,
+            leadingIcon: m.contains('GPS')
+                ? Icons.gps_fixed
+                : Icons.edit_location_alt,
             onTap: () => setState(() => selected = m),
           );
         }).toList(),
       ),
-      footer: NextButton(
-        enabled: selected != null,
+      footer: CustomElevatedButton(
+        text: "التالي",
         onPressed: () => widget.onNext(selected!),
       ),
     );

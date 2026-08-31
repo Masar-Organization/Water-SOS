@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:water_sos/core/global/design_system/app_color/app_colors.dart';
+import 'package:water_sos/core/global/design_system/app_color/app_color_light.dart';
 import 'package:water_sos/core/global/design_system/font_weight/font_weight_helper.dart';
+import 'package:water_sos/core/global/design_system/theme_data/app_button_theme.dart';
 
 class AppTheme {
-  static const AppColors lightColors = AppColorLight();
-
   static const String _defaultFont = '';
+
+  // ---------------------------------------------------------------------------
+  // Text Styles
+  // ---------------------------------------------------------------------------
 
   static TextStyle _style({
     required double fontSize,
@@ -56,93 +59,161 @@ class AppTheme {
     );
   }
 
-  static const LinearGradient primaryGradient = LinearGradient(
-    begin: Alignment.centerLeft,
-    end: Alignment.centerRight,
-    colors: [Color(0xFF23B7DB), Color(0xFF0E8CBC)],
+  // ---------------------------------------------------------------------------
+  // Light Button Theme
+  // ---------------------------------------------------------------------------
+
+  static const AppButtonTheme lightButtonTheme = AppButtonTheme(
+    backgroundGradient: LinearGradient(
+      begin: Alignment.centerLeft,
+      end: Alignment.centerRight,
+      colors: [Color(0xFF23B7DB), Color(0xFF0E8CBC)],
+    ),
+
+    foregroundColor: Colors.white,
+
+    disabledBackgroundColor: Color(0xFFB9C8EA),
+    disabledForegroundColor: Colors.white,
+    outlinedForegroundColor: Color(0xFF00A3C4),
+    outlinedDisabledForegroundColor: Color(0xFF9CA3AF),
+    outlinedBorderColor: Color(0xFF00A3C4),
+    outlinedDisabledBorderColor: Color(0xFFD1D5DB),
+    outlinedBorderWidth: 1,
+    iconSize: 12,
+    height: 42,
+    borderRadius: 100,
+
+    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+
+    iconSpacing: 10,
+
+    loadingIndicatorSize: 24,
+    loadingStrokeWidth: 2.5,
   );
 
-  // (Light Theme)
+  // ---------------------------------------------------------------------------
+  // Light Theme
+  // ---------------------------------------------------------------------------
+
   static ThemeData get lightTheme {
+    final colors = AppColorLight.colors;
+
     return ThemeData(
       brightness: Brightness.light,
+
+      extensions: const [AppColorLight.colors, lightButtonTheme],
+
       fontFamily: _defaultFont,
-      primaryColor: lightColors.primaryColor,
-      scaffoldBackgroundColor: lightColors.backgroundColor,
-      cardColor: lightColors.cardColor,
+
+      primaryColor: colors.primaryColor,
+      scaffoldBackgroundColor: colors.backgroundColor,
+      cardColor: colors.cardColor,
+
       colorScheme: ColorScheme.light(
-        primary: lightColors.primaryColor,
-        surface: lightColors.cardColor,
-        onSurface: lightColors.textPrimaryColor,
-        onSurfaceVariant: lightColors.textSecondaryColor,
+        primary: colors.primaryColor,
+        surface: colors.cardColor,
+        onSurface: colors.textPrimaryColor,
+        onSurfaceVariant: colors.textSecondaryColor,
       ),
 
-      textTheme: _buildTextTheme(textColor: lightColors.textPrimaryColor),
+      textTheme: _buildTextTheme(textColor: colors.textPrimaryColor),
 
+      // -----------------------------------------------------------------------
+      // Default Elevated Button
+      // -----------------------------------------------------------------------
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
           elevation: 0,
-          foregroundColor: Colors.white,
-          minimumSize: Size(double.infinity, 42),
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          foregroundColor: lightButtonTheme.foregroundColor,
+          minimumSize: Size(double.infinity, lightButtonTheme.height),
+          padding: lightButtonTheme.padding,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
+            borderRadius: BorderRadius.circular(lightButtonTheme.borderRadius),
           ),
           textStyle: _style(
             fontSize: 16,
             fontWeight: FontWeightHelper.bold,
             lineHeight: 24,
-            textColor: Colors.white,
+            textColor: lightButtonTheme.foregroundColor,
           ),
         ),
       ),
+
+      // -----------------------------------------------------------------------
+      // Outlined Button
+      // -----------------------------------------------------------------------
+      outlinedButtonTheme: OutlinedButtonThemeData(
+        style: OutlinedButton.styleFrom(
+          backgroundColor: Colors.transparent,
+          foregroundColor: colors.primaryColor,
+          minimumSize: Size(double.infinity, lightButtonTheme.height),
+          padding: lightButtonTheme.padding,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(lightButtonTheme.borderRadius),
+          ),
+          side: BorderSide(color: colors.primaryColor, width: 1),
+          textStyle: _style(
+            fontSize: 16,
+            fontWeight: FontWeightHelper.bold,
+            lineHeight: 24,
+            textColor: colors.primaryColor,
+          ),
+        ),
+      ),
+
+      // -----------------------------------------------------------------------
+      // Input
+      // -----------------------------------------------------------------------
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: lightColors.cardColor,
+        fillColor: colors.cardColor,
         isDense: true,
 
-        contentPadding: EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
 
-        prefixIconConstraints: BoxConstraints(minWidth: 20, minHeight: 20),
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 20,
+          minHeight: 20,
+        ),
 
         hintStyle: _buildTextTheme(
-          textColor: lightColors.textSecondaryColor,
+          textColor: colors.textSecondaryColor,
         ).labelMedium,
 
         labelStyle: _buildTextTheme(
-          textColor: lightColors.textSecondaryColor,
+          textColor: colors.textSecondaryColor,
         ).labelMedium,
 
-        suffixIconColor: lightColors.textSecondaryColor,
+        suffixIconColor: colors.textSecondaryColor,
 
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: lightColors.inputBorderColor),
+          borderSide: BorderSide(color: colors.inputBorderColor),
         ),
 
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: lightColors.inputBorderColor),
+          borderSide: BorderSide(color: colors.inputBorderColor),
         ),
 
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(
-            color: lightColors.inputFocusedBorderColor,
+            color: colors.inputFocusedBorderColor,
             width: 1,
           ),
         ),
 
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: lightColors.inputErrorBorderColor),
+          borderSide: BorderSide(color: colors.inputErrorBorderColor),
         ),
 
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: BorderSide(color: lightColors.inputErrorBorderColor),
+          borderSide: BorderSide(color: colors.inputErrorBorderColor),
         ),
       ),
     );

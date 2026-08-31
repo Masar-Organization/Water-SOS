@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:water_sos/core/constants/app_images.dart';
 import 'package:water_sos/presentation/screens/location_flow_screen.dart';
-import 'package:water_sos/presentation/screens/location_selection.dart';
-import 'package:water_sos/presentation/screens/map_illustration.dart';
-import 'package:water_sos/presentation/screens/shared_widgets.dart';
+import 'package:water_sos/core/constants/location_selection.dart';
+import 'package:water_sos/presentation/widgets/custom_elevated_button.dart';
+import 'package:water_sos/presentation/widgets/location_flow/info_banner.dart';
+import 'package:water_sos/presentation/widgets/location_flow/step_scaffold.dart';
+import 'package:water_sos/presentation/widgets/map_illustration.dart';
+import 'package:water_sos/presentation/widgets/location_flow/review_tile.dart';
 
 class SelectLandmarkScreen extends StatefulWidget {
   final LocationSelection selection;
@@ -33,7 +37,9 @@ class _SelectLandmarkScreenState extends State<SelectLandmarkScreen> {
     return StepScaffold(
       title: 'أدخل معلمًا معروفًا',
       subtitle: 'اكتب معلمًا قريبًا من موقعك لتحديده بدقة',
-      illustration: const MapIllustration(),
+      illustration:  MapIllustration(
+        image: AppImages.imageLandmark,
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
@@ -59,10 +65,11 @@ class _SelectLandmarkScreenState extends State<SelectLandmarkScreen> {
           const InfoBanner(title: 'معلومة', text: 'كلما كان المعلم أقرب لموقعك كان تحديده أدق.'),
         ],
       ),
-      footer: NextButton(
-        enabled: true,
+      footer: CustomElevatedButton(
+        text: "التالي",
         onPressed: () => widget.onNext(_controller.text.trim()),
       ),
+
     );
   }
 }

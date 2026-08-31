@@ -1,90 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:water_sos/presentation/screens/location_selection.dart';
-import 'package:water_sos/presentation/screens/select_citizen_location.dart';
-import 'package:water_sos/presentation/screens/gps_locating_screen.dart';
-import 'package:water_sos/presentation/screens/select_governorate_screen.dart';
-import 'package:water_sos/presentation/screens/select_region_screen.dart';
-import 'package:water_sos/presentation/screens/select_street_screen.dart';
-import 'package:water_sos/presentation/screens/select_landmark_screen.dart';
-import 'package:water_sos/presentation/screens/review_screen.dart';
+import 'package:water_sos/core/extension/app_sizes.dart';
+import 'package:water_sos/core/extension/opacity_of_color.dart';
+import 'package:water_sos/data/dummy_data.dart';
+import 'package:water_sos/core/constants/location_selection.dart';
+import 'package:water_sos/presentation/inner_screens/select_citizen_location.dart';
+import 'package:water_sos/presentation/inner_screens/gps_locating_screen.dart';
+import 'package:water_sos/presentation/inner_screens/select_governorate_screen.dart';
+import 'package:water_sos/presentation/inner_screens/select_region_screen.dart';
+import 'package:water_sos/presentation/inner_screens/select_street_screen.dart';
+import 'package:water_sos/presentation/inner_screens/select_landmark_screen.dart';
+import 'package:water_sos/presentation/inner_screens/review_screen.dart';
 
 
-// ============================================================
-// Dummy data (address lists — replace with a real API later)
-// ============================================================
-class DummyData {
-  static const List<String> methods = ['تحديد عبر GPS', 'إدخال يدوي'];
 
-  static const List<String> governorates = [
-    'شمال غزة',
-    'غزة',
-    'الوسطى',
-    'خانيونس',
-    'رفح',
-  ];
 
-  static const Map<String, List<String>> regionsByGovernorate = {
-    'شمال غزة': ['شمال غزة', 'جباليا', 'بيت لاهيا', 'بيت حانون'],
-    'غزة': ['الرمال', 'الزيتون', 'الشجاعية', 'التفاح'],
-    'الوسطى': ['النصيرات', 'دير البلح', 'المغراقة', 'البريج'],
-    'خانيونس': ['خانيونس البلد', 'خزاعة', 'عبسان', 'بني سهيلا'],
-    'رفح': ['رفح البلد', 'الشوكة', 'تل السلطان'],
-  };
-
-  static const Map<String, List<String>> streetsByRegion = {
-    'جباليا': ['شارع النصر', 'شارع الوحدة', 'شارع السوق', 'حي الزيتون', 'حي السلام', 'حي الأمل'],
-    'النصيرات': ['المخيم الجديد', 'المخيم القديم', 'حي الشهداء'],
-    'الرمال': ['شارع الجلاء', 'شارع عمر المختار', 'شارع الرشيد'],
-  };
-
-  static const List<String> defaultStreets = ['الحي الأول', 'الحي الثاني', 'الشارع الرئيسي'];
-
-  /// Stand-in for a real reverse-geocoding call. Given a captured GPS fix,
-  /// returns the address fields to pre-fill (still editable afterwards).
-  static ({String governorate, String region, String street}) reverseGeocode(
-    double lat,
-    double lng,
-  ) {
-    return (governorate: 'الوسطى', region: 'النصيرات', street: 'المخيم الجديد');
-  }
-}
-
-// ============================================================
-// Step identifiers (order used only for the progress bar / labels —
-// actual navigation branches around "locating" depending on the method)
-// ============================================================
-class StepDef {
-  final String key;
-  final String label;
-  const StepDef(this.key, this.label);
-}
-
-const List<StepDef> kAllSteps = [
-  StepDef('method', 'الطريقة'),
-  StepDef('locating', 'تحديد الموقع'),
-  StepDef('governorate', 'المحافظة'),
-  StepDef('region', 'المنطقة'),
-  StepDef('street', 'الحي/الشارع'),
-  StepDef('landmark', 'المعلم'),
-  StepDef('review', 'مراجعة'),
-];
-
-const List<StepDef> kManualSteps = [
-  StepDef('method', 'الطريقة'),
-  StepDef('governorate', 'المحافظة'),
-  StepDef('region', 'المنطقة'),
-  StepDef('street', 'الحي/الشارع'),
-  StepDef('landmark', 'المعلم'),
-  StepDef('review', 'مراجعة'),
-];
-
-// ============================================================
-// Main controller — decides which screen to show and how to get there.
-//
-// Navigation is a small stack of step keys (not a fixed-size PageView)
-// because the path length differs: GPS goes through "locating", manual
-// entry skips it entirely and goes straight to "governorate".
-// ============================================================
 class LocationFlowScreen extends StatefulWidget {
   const LocationFlowScreen({super.key});
 
@@ -112,8 +41,6 @@ class _LocationFlowScreenState extends State<LocationFlowScreen> {
     }
   }
 
-  /// Used by the review screen's "edit" buttons: truncates the stack back
-  /// to the requested step instead of pushing a duplicate on top.
   void _jumpTo(String key) {
     setState(() {
       final idx = _stack.indexOf(key);
@@ -125,13 +52,10 @@ class _LocationFlowScreenState extends State<LocationFlowScreen> {
     });
   }
 
-  // ---- Step transition handlers -----------------------------------
 
   void _onMethodChosen(String method) {
     selection.method = method;
     selection.resetAddress();
-    // This is the branch point: GPS goes to the locating screen, manual
-    // entry skips straight to picking the governorate by hand.
     if (selection.isManual) {
       _push('governorate');
     } else {
@@ -139,13 +63,7 @@ class _LocationFlowScreenState extends State<LocationFlowScreen> {
     }
   }
 
-  void _onGpsCaptured() {
-    // Latitude/longitude/capturedAt were already written onto `selection`
-    // by GpsLocatingScreen. The reverse-geocoded address is pre-filled but
-    // still editable on the following screens.
-    _push('governorate');
-  }
-
+  void _onGpsCaptured() => _push('governorate');
   void _onGpsCancelled() => _jumpTo('method');
 
   void _onGovernorateChosen(String g) {
@@ -174,37 +92,110 @@ class _LocationFlowScreenState extends State<LocationFlowScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Column(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFFE8FAFF),
+              Color(0xFFF5FDFF),
+              Color(0xFFFFFFFF),
+            ],
+            stops: [0.0, 0.45, 1.0],
+          ),
+        ),
+        child: Stack(
           children: [
-            const SizedBox(height: 8),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                children: [
-                  IconButton(onPressed: _back, icon: const Icon(Icons.arrow_back_ios_new, size: 18)),
-                  Expanded(
-                    child: StepProgressBar(steps: _visibleSteps, currentIndex: _currentIndex),
+            // 🌊 Decorative water wave
+            Positioned(
+              top: -100,
+              right: -80,
+              child: Container(
+                width: 280,
+                height: 280,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF00C2E0).changeOpacity(0.18),
+                      Color(0xFF0077C8).changeOpacity(0.04),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
-            const SizedBox(height: 8),
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 320),
-                transitionBuilder: (child, animation) {
-                  final slide = Tween<Offset>(begin: const Offset(0.12, 0), end: Offset.zero)
-                      .animate(CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
-                  return FadeTransition(
-                    opacity: animation,
-                    child: SlideTransition(position: slide, child: child),
-                  );
-                },
-                child: KeyedSubtree(
-                  key: ValueKey(_current),
-                  child: _buildStep(_current),
+
+            // 💧 Small decorative bubble
+            Positioned(
+              top: 180,
+              left: -30,
+              child: Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFF00C2E0).changeOpacity(0.06),
                 ),
+              ),
+            ),
+
+            SafeArea(
+              child:    Column(
+                spacing: context.height(8),
+                children: [
+                  Padding(
+                    padding:context.spaceSymmetric(horizontal: 20, vertical: 16),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: _back,
+                          icon: const Icon(
+                            Icons.arrow_back_ios_new,
+                            size: 18,
+                          ),
+                        ),
+                        Expanded(
+                          child: StepProgressBar(
+                            steps: _visibleSteps,
+                            currentIndex: _currentIndex,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+
+
+                  Expanded(
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 320),
+                      transitionBuilder: (child, animation) {
+                        final slide = Tween<Offset>(
+                          begin: const Offset(0.12, 0),
+                          end: Offset.zero,
+                        ).animate(
+                          CurvedAnimation(
+                            parent: animation,
+                            curve: Curves.easeOutCubic,
+                          ),
+                        );
+
+                        return FadeTransition(
+                          opacity: animation,
+                          child: SlideTransition(
+                            position: slide,
+                            child: child,
+                          ),
+                        );
+                      },
+                      child: KeyedSubtree(
+                        key: ValueKey(_current),
+                        child: _buildStep(_current),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -239,72 +230,7 @@ class _LocationFlowScreenState extends State<LocationFlowScreen> {
   }
 }
 
-// ============================================================
-// Shared step layout (title/subtitle/illustration/body/footer)
-// ============================================================
-class StepScaffold extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final Widget illustration;
-  final Widget body;
-  final Widget footer;
 
-  const StepScaffold({
-    super.key,
-    required this.title,
-    required this.subtitle,
-    required this.illustration,
-    required this.body,
-    required this.footer,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            child: Column(
-              children: [
-                Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Color(0xFF0B1E4A))),
-                const SizedBox(height: 8),
-                Text(subtitle, textAlign: TextAlign.center, style: const TextStyle(fontSize: 13, color: Colors.grey)),
-                const SizedBox(height: 20),
-                illustration,
-                const SizedBox(height: 20),
-                body,
-              ],
-            ),
-          ),
-        ),
-        Padding(padding: const EdgeInsets.fromLTRB(20, 8, 20, 16), child: footer),
-      ],
-    );
-  }
-}
-
-class NextButton extends StatelessWidget {
-  final bool enabled;
-  final VoidCallback onPressed;
-  const NextButton({super.key, required this.enabled, required this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: enabled ? onPressed : null,
-      icon: const Icon(Icons.arrow_back_ios_new, size: 14),
-      label: const Text('التالي'),
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size.fromHeight(52),
-        backgroundColor: const Color(0xFF1657D6),
-        foregroundColor: Colors.white,
-        disabledBackgroundColor: const Color(0xFFB9C8EA),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
-      ),
-    );
-  }
-}
 
 class StepProgressBar extends StatelessWidget {
   final List<StepDef> steps;

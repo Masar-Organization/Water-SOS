@@ -2,8 +2,6 @@ class AppIcons {
   AppIcons._();
   static const String baseIconUrl = 'assets/icons/';
 
-  static const String visibility = '${baseIconUrl}visibility.svg';
-  static const String visibilityOff = '${baseIconUrl}visibility_off.svg';
-  static const String email = '${baseIconUrl}email.svg';
-  static const String lock = '${baseIconUrl}lock.svg';
+  static const String iconVisibility = '${baseIconUrl}visibility.svg';
+  static const String iconVisibilityOff = '${baseIconUrl}visibility_off.svg';
 }

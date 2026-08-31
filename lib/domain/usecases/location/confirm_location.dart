@@ -4,9 +4,6 @@ import 'package:water_sos/core/usecases/usecase.dart';
 import 'package:water_sos/domain/entities/location_entity.dart';
 import 'package:water_sos/domain/repositories/location_repository.dart';
 
-/// Business rule lives here, not in the widget: a location can't be
-/// confirmed until governorate/region/street are all set, regardless of
-/// whether they were typed by hand or pre-filled from a GPS fix.
 class ConfirmLocation implements UseCase<void, LocationEntity> {
   final LocationRepository repository;
   const ConfirmLocation(this.repository);

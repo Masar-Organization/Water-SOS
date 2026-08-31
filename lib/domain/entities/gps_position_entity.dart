@@ -1,7 +1,3 @@
-/// What a successful GPS fix looks like at the domain level. `capturedAt`
-/// is the "captured_at" moment the fix was obtained — kept alongside the
-/// coordinates so it can be persisted/displayed later, not derived at
-/// display time.
 class GpsPositionEntity {
   final double latitude;
   final double longitude;

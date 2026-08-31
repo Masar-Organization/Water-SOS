@@ -1,12 +1,9 @@
 import 'package:water_sos/domain/entities/gps_position_entity.dart';
 import 'package:water_sos/domain/entities/governorate_entity.dart';
-import 'package:water_sos/domain/entities/location_method.dart';
+import 'package:water_sos/core/constants/location_method.dart';
 import 'package:water_sos/domain/entities/region_entity.dart';
 import 'package:water_sos/domain/entities/street_entity.dart';
 
-/// The full address the flow is building, regardless of whether it was
-/// reached via GPS or manual entry. `gpsPosition` is only non-null when
-/// [method] is [LocationMethod.gps].
 class LocationEntity {
   final LocationMethod method;
   final GpsPositionEntity? gpsPosition;
