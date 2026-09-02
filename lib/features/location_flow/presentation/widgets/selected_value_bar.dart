@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:water_sos/core/extension/app_sizes.dart';
 import 'package:water_sos/core/extension/text_style_extension.dart';
-import 'package:water_sos/core/global/design_system/theme_data/theme_extension.dart';
+import 'package:water_sos/core/design_system/theme_data/theme_extension.dart';
 
 class SelectedValueBar extends StatelessWidget {
   final String label;

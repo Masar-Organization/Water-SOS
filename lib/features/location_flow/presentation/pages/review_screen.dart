@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:water_sos/core/constants/app_images.dart';
 import 'package:water_sos/core/constants/location_selection.dart';
 import 'package:water_sos/core/extension/app_sizes.dart';
-import 'package:water_sos/presentation/widgets/custom_elevated_button.dart';
-import 'package:water_sos/presentation/widgets/custom_outlined_button.dart';
-import 'package:water_sos/presentation/widgets/location_flow/info_banner.dart';
-import 'package:water_sos/presentation/widgets/location_flow/step_scaffold.dart';
-import 'package:water_sos/presentation/widgets/map_illustration.dart';
-import 'package:water_sos/presentation/widgets/location_flow/review_tile.dart';
+import 'package:water_sos/features/location_flow/presentation/widgets/review_tile.dart';
+import 'package:water_sos/features/location_flow/presentation/widgets/step_scaffold.dart';
+import 'package:water_sos/shared/widgets/custom_elevated_button.dart';
+import 'package:water_sos/shared/widgets/custom_outlined_button.dart';
+import 'package:water_sos/features/location_flow/presentation/widgets/info_banner.dart';
+import 'package:water_sos/features/location_flow/presentation/widgets/map_illustration.dart';
 
 class ReviewScreen extends StatelessWidget {
   final LocationSelection selection;
@@ -127,7 +127,7 @@ class ReviewScreen extends StatelessWidget {
             child: CustomElevatedButton(
               text: 'تأكيد الموقع',
               onPressed: selection.hasBasics ? () => _confirm(context) : null,
-              iconData: Icons.arrow_back_ios_new,
+             // iconData: Icons.arrow_back_ios_new,
             ),
           ),
         ],
