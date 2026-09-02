@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:water_sos/core/constants/app_images.dart';
-import 'package:water_sos/data/dummy_data.dart';
-import 'package:water_sos/presentation/screens/location_flow_screen.dart';
+import 'package:water_sos/features/location_flow/data/dummy_data.dart';
 import 'package:water_sos/core/constants/location_selection.dart';
-import 'package:water_sos/presentation/widgets/custom_elevated_button.dart';
-import 'package:water_sos/presentation/widgets/location_flow/selected_value_bar.dart';
-import 'package:water_sos/presentation/widgets/location_flow/step_scaffold.dart';
-import 'package:water_sos/presentation/widgets/map_illustration.dart';
-import 'package:water_sos/presentation/widgets/location_flow/selectable_tile.dart';
-import 'package:water_sos/presentation/widgets/location_flow/review_tile.dart';
+import 'package:water_sos/features/location_flow/presentation/widgets/selectable_tile.dart';
+import 'package:water_sos/features/location_flow/presentation/widgets/selected_value_bar.dart';
+import 'package:water_sos/features/location_flow/presentation/widgets/step_scaffold.dart';
+import 'package:water_sos/shared/widgets/custom_elevated_button.dart';
+import 'package:water_sos/features/location_flow/presentation/widgets/map_illustration.dart';
 
 class SelectGovernorateScreen extends StatefulWidget {
   final LocationSelection selection;

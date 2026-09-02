@@ -1,8 +1,8 @@
-import 'package:water_sos/domain/entities/gps_position_entity.dart';
-import 'package:water_sos/domain/entities/governorate_entity.dart';
 import 'package:water_sos/core/constants/location_method.dart';
-import 'package:water_sos/domain/entities/region_entity.dart';
-import 'package:water_sos/domain/entities/street_entity.dart';
+import 'package:water_sos/features/location_flow/domain/entities/governorate_entity.dart';
+import 'package:water_sos/features/location_flow/domain/entities/gps_position_entity.dart';
+import 'package:water_sos/features/location_flow/domain/entities/region_entity.dart';
+import 'package:water_sos/features/location_flow/domain/entities/street_entity.dart';
 
 class LocationEntity {
   final LocationMethod method;

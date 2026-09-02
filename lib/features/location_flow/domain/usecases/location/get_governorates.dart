@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:water_sos/core/error/failures.dart';
 import 'package:water_sos/core/usecases/usecase.dart';
-import 'package:water_sos/domain/entities/governorate_entity.dart';
-import 'package:water_sos/domain/repositories/location_repository.dart';
+import 'package:water_sos/features/location_flow/domain/entities/governorate_entity.dart';
+import 'package:water_sos/features/location_flow/domain/repositories/location_repository.dart';
 
 class GetGovernorates implements UseCase<List<GovernorateEntity>, NoParams> {
   final LocationRepository repository;

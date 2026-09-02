@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:water_sos/data/dummy_data.dart';
-import 'package:water_sos/presentation/screens/location_flow_screen.dart';
+import 'package:water_sos/features/location_flow/data/dummy_data.dart';
+import 'package:water_sos/features/location_flow/presentation/pages/location_flow_screen.dart';
 import 'package:water_sos/core/constants/location_selection.dart';
-import 'package:water_sos/presentation/widgets/location_flow/info_banner.dart';
-import 'package:water_sos/presentation/widgets/location_flow/review_tile.dart';
-import 'package:water_sos/presentation/widgets/custom_elevated_button.dart';
-import 'package:water_sos/presentation/widgets/custom_outlined_button.dart';
-import 'package:water_sos/presentation/widgets/location_flow/step_scaffold.dart';
-import 'package:water_sos/presentation/widgets/location_flow/tips_box.dart';
+import 'package:water_sos/features/location_flow/presentation/widgets/info_banner.dart';
+import 'package:water_sos/features/location_flow/presentation/widgets/step_scaffold.dart';
+import 'package:water_sos/features/location_flow/presentation/widgets/tips_box.dart';
+import 'package:water_sos/shared/widgets/custom_elevated_button.dart';
+import 'package:water_sos/shared/widgets/custom_outlined_button.dart';
 
 enum _GpsState {
   locating,

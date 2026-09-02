@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:water_sos/core/extension/app_sizes.dart';
-import 'package:water_sos/core/global/design_system/font_weight/font_weight_helper.dart';
-import 'package:water_sos/core/global/design_system/theme_data/theme_extension.dart';
+import 'package:water_sos/core/design_system/font_weight/font_weight_helper.dart';
+import 'package:water_sos/core/design_system/theme_data/theme_extension.dart';
 
 class SelectableTile extends StatelessWidget {
   final String label;
