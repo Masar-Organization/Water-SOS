@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:water_sos/core/global/design_system/theme_data/app_theme.dart';
 import 'package:water_sos/core/routing/app_router.dart';
 import 'package:water_sos/core/routing/routes.dart';
-import 'package:water_sos/presentation/screens/splash_screen.dart';
 
-import 'presentation/screens/location_flow_screen.dart';
 
-class WareApp extends StatelessWidget {
+class WaterApp extends StatelessWidget {
   final AppRouter appRouter;
-  const WareApp({super.key, required this.appRouter});
+  const WaterApp({super.key, required this.appRouter});
 
   @override
   Widget build(BuildContext context) {
