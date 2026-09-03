@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:water_sos/core/routing/routes.dart';
-import 'package:water_sos/presentation/screens/location_flow_screen.dart';
-import 'package:water_sos/presentation/screens/main_screen.dart';
-import 'package:water_sos/presentation/screens/splash_screen.dart';
+import 'package:water_sos/features/location_flow/presentation/pages/location_flow_screen.dart';
+import 'package:water_sos/features/splash/presentation/pages/splash_screen.dart';
+import 'package:water_sos/presentation/shell/main_shell.dart';
 
 class AppRouter {
   Route generateRoute(RouteSettings settings) {
@@ -16,7 +16,7 @@ class AppRouter {
       case Routes.locationFlowScreen:
         return MaterialPageRoute(builder: (_) => LocationFlowScreen());
       case Routes.mainScreen:
-        return MaterialPageRoute(builder: (_) => MainScreen());
+        return MaterialPageRoute(builder: (_) => MainShell());
 
       default:
         return MaterialPageRoute(
